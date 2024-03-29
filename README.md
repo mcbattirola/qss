@@ -7,5 +7,10 @@ TODO
 - [ ] Keys
   - [ ] Right click: print whole screen
   - [ ] Right click while dragging: cancel selection
-  - [x] Esc: cancel
+  - [x] Esc: quit
+  - [ ] Esc (during selection): cancel current selection, don't quit app
+- [ ] Show rect size while dragging
 - [ ] New name
+- [ ] File name
+- [ ] Test on other OSs
+- [ ] Use slog instead of std.Fmt

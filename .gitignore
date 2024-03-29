@@ -1,1 +1,4 @@
 dist/
+
+# screenshots taking during testing
+screenshot-*
