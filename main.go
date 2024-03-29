@@ -15,6 +15,12 @@ import (
 
 type State int8
 
+type App struct {
+	state                   State
+	recInitPos, recFinalPos rl.Vector2
+	done                    bool
+}
+
 const (
 	Idle State = iota
 	Selecting
@@ -48,71 +54,24 @@ func main() {
 	rl.SetMouseCursor(3) // cross
 
 	// state
-	recInitPos := rl.Vector2{}
-	recFinalPos := rl.Vector2{}
-	state := Idle
+	qss := App{
+		state:       Idle,
+		recInitPos:  rl.Vector2{},
+		recFinalPos: rl.Vector2{},
+	}
 
-	for !rl.WindowShouldClose() {
+	for !rl.WindowShouldClose() && !qss.done {
 		// ----- start texture drawing
 		rl.BeginTextureMode(target)
 		rl.ClearBackground(rl.Blank)
 
-		// handle input
-		mousePos := rl.GetMousePosition()
-		// first clicked, set as initial pos
-		if rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
-			if !(state == Selecting) {
-				state = Selecting
-			}
-			recInitPos = mousePos
-		}
-		// being pressed, set final position
-		if rl.IsMouseButtonDown(rl.MouseButtonLeft) {
-			recFinalPos = mousePos
-		}
-		// release, store final pos and set not drawing
-		if rl.IsMouseButtonReleased(rl.MouseButtonLeft) {
-			if state == Selecting {
-				state = Idle
-				recFinalPos = mousePos
-
-				// take screen shot
-				topLeftX := float32(math.Min(float64(recInitPos.X), float64(recFinalPos.X)))
-				topLeftY := float32(math.Min(float64(recInitPos.Y), float64(recFinalPos.Y)))
-				botRightX := float32(math.Max(float64(recInitPos.X), float64(recFinalPos.X)))
-				botRightY := float32(math.Max(float64(recInitPos.Y), float64(recFinalPos.Y)))
-
-				captureAndSaveAsPNG(image.Rectangle{
-					Min: image.Point{
-						X: int(topLeftX),
-						Y: int(topLeftY),
-					},
-					Max: image.Point{
-						X: int(botRightX),
-						Y: int(botRightY),
-					},
-				}, fmt.Sprintf("screenshot-%s.png", getCurrentTimeStr()))
-				// after taking screenshot, quit
-				rl.CloseWindow()
-			}
+		switch qss.state {
+		case Idle:
+			qss.handleIdle()
+		case Selecting:
+			qss.handleSelecting()
 		}
 
-		// draw instructions etc
-		if state != Selecting {
-			rl.DrawText(getCurrentTimeStr(), 10, 10, 20, rl.White)
-		}
-
-		// draw rec
-		if state == Selecting {
-			// Calculate the width and height as the absolute difference between the initial and final positions
-			rectSize := getRectSize(recInitPos, recFinalPos)
-
-			// Determine the top-left corner of the rectangle
-			topLeftX := int32(math.Min(float64(recInitPos.X), float64(recFinalPos.X)))
-			topLeftY := int32(math.Min(float64(recInitPos.Y), float64(recFinalPos.Y)))
-
-			rl.DrawRectangleLines(topLeftX-1, topLeftY-1, int32(rectSize.X)+2, int32(rectSize.Y)+2, drawColor)
-		}
 		rl.EndTextureMode()
 		// ----- end texture drawing
 
@@ -125,6 +84,8 @@ func main() {
 		rl.EndDrawing()
 		// ----- end drawing to screen
 	}
+	fmt.Printf("finished")
+	os.Exit(0)
 }
 
 // getRectSize returns the size of the rect
@@ -157,4 +118,63 @@ func captureAndSaveAsPNG(bounds image.Rectangle, fileName string) {
 
 func getCurrentTimeStr() string {
 	return strings.ReplaceAll(time.Now().UTC().Format(time.RFC3339), ":", "_")
+}
+
+func (qss *App) handleIdle() {
+	// handle input
+	// first clicked, set as initial pos
+	if rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
+		if !(qss.state == Selecting) {
+			qss.state = Selecting
+		}
+		qss.recInitPos = rl.GetMousePosition()
+	}
+
+	// draw instructions, UI etc
+	if qss.state != Selecting {
+		rl.DrawText(getCurrentTimeStr(), 10, 10, 20, rl.White)
+	}
+}
+
+func (qss *App) handleSelecting() {
+	// release, store final pos and set not drawing
+	if rl.IsMouseButtonReleased(rl.MouseButtonLeft) {
+		qss.state = Idle
+		qss.recFinalPos = rl.GetMousePosition()
+
+		// take screen shot
+		topLeftX := float32(math.Min(float64(qss.recInitPos.X), float64(qss.recFinalPos.X)))
+		topLeftY := float32(math.Min(float64(qss.recInitPos.Y), float64(qss.recFinalPos.Y)))
+		botRightX := float32(math.Max(float64(qss.recInitPos.X), float64(qss.recFinalPos.X)))
+		botRightY := float32(math.Max(float64(qss.recInitPos.Y), float64(qss.recFinalPos.Y)))
+
+		captureAndSaveAsPNG(image.Rectangle{
+			Min: image.Point{
+				X: int(topLeftX),
+				Y: int(topLeftY),
+			},
+			Max: image.Point{
+				X: int(botRightX),
+				Y: int(botRightY),
+			},
+		}, fmt.Sprintf("screenshot-%s.png", getCurrentTimeStr()))
+		// after taking screenshot, quit
+		qss.done = true
+		return
+	}
+
+	// being pressed, set final position to current mouse location
+	if rl.IsMouseButtonDown(rl.MouseButtonLeft) {
+		qss.recFinalPos = rl.GetMousePosition()
+	}
+
+	// draw
+	// Calculate the width and height as the absolute difference between the initial and final positions
+	rectSize := getRectSize(qss.recInitPos, qss.recFinalPos)
+
+	// Determine the top-left corner of the rectangle
+	topLeftX := int32(math.Min(float64(qss.recInitPos.X), float64(qss.recFinalPos.X)))
+	topLeftY := int32(math.Min(float64(qss.recInitPos.Y), float64(qss.recFinalPos.Y)))
+
+	rl.DrawRectangleLines(topLeftX-1, topLeftY-1, int32(rectSize.X)+2, int32(rectSize.Y)+2, drawColor)
 }

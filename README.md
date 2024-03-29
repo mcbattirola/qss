@@ -14,3 +14,4 @@ TODO
 - [ ] File name
 - [ ] Test on other OSs
 - [ ] Use slog instead of std.Fmt
+- [ ] CLI interface

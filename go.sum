@@ -4,8 +4,6 @@ github.com/gen2brain/raylib-go/raylib v0.0.0-20240227114648-c3665eb9abf8 h1:KdLt
 github.com/gen2brain/raylib-go/raylib v0.0.0-20240227114648-c3665eb9abf8/go.mod h1:P/hDjVwz/9fhR0ww3+umzDpDA7Bf7Tce4xNChHIEFqE=
 github.com/gen2brain/shm v0.1.0 h1:MwPeg+zJQXN0RM9o+HqaSFypNoNEcNpeoGp0BTSx2YY=
 github.com/gen2brain/shm v0.1.0/go.mod h1:UgIcVtvmOu+aCJpqJX7GOtiN7X2ct+TKLg4RTxwPIUA=
-github.com/go-gl/glfw/v3.3/glfw v0.0.0-20240307211618-a69d953ea142 h1:/4YI5K2b16JtP2cL4D2xDNvH/ESm2ZbGJ0VsudkHJ5s=
-github.com/go-gl/glfw/v3.3/glfw v0.0.0-20240307211618-a69d953ea142/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
 github.com/jezek/xgb v1.1.1 h1:bE/r8ZZtSv7l9gk6nU0mYx51aXrvnyb44892TwSaqS4=
 github.com/jezek/xgb v1.1.1/go.mod h1:nrhwO0FX/enq75I7Y7G8iN1ubpSGZEiA3v9e9GyRFlk=
 github.com/kbinani/screenshot v0.0.0-20230812210009-b87d31814237 h1:YOp8St+CM/AQ9Vp4XYm4272E77MptJDHkwypQHIRl9Q=
