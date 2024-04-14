@@ -15,16 +15,17 @@ import (
 
 type State int8
 
+const (
+	Idle State = iota
+	Selecting
+	Selected
+)
+
 type App struct {
 	state                   State
 	recInitPos, recFinalPos rl.Vector2
 	done                    bool
 }
-
-const (
-	Idle State = iota
-	Selecting
-)
 
 var drawColor = rl.Color{
 	R: 255,
@@ -70,6 +71,10 @@ func main() {
 			qss.handleIdle()
 		case Selecting:
 			qss.handleSelecting()
+		case Selected:
+			qss.handleSelected()
+		default:
+			fmt.Printf("unknown state %d\n", qss.state)
 		}
 
 		rl.EndTextureMode()
@@ -139,27 +144,10 @@ func (qss *App) handleIdle() {
 func (qss *App) handleSelecting() {
 	// release, store final pos and set not drawing
 	if rl.IsMouseButtonReleased(rl.MouseButtonLeft) {
-		qss.state = Idle
+		qss.state = Selected
 		qss.recFinalPos = rl.GetMousePosition()
 
-		// take screen shot
-		topLeftX := float32(math.Min(float64(qss.recInitPos.X), float64(qss.recFinalPos.X)))
-		topLeftY := float32(math.Min(float64(qss.recInitPos.Y), float64(qss.recFinalPos.Y)))
-		botRightX := float32(math.Max(float64(qss.recInitPos.X), float64(qss.recFinalPos.X)))
-		botRightY := float32(math.Max(float64(qss.recInitPos.Y), float64(qss.recFinalPos.Y)))
-
-		captureAndSaveAsPNG(image.Rectangle{
-			Min: image.Point{
-				X: int(topLeftX),
-				Y: int(topLeftY),
-			},
-			Max: image.Point{
-				X: int(botRightX),
-				Y: int(botRightY),
-			},
-		}, fmt.Sprintf("screenshot-%s.png", getCurrentTimeStr()))
-		// after taking screenshot, quit
-		qss.done = true
+		// return here so we don't  draw the rectangle this frame
 		return
 	}
 
@@ -169,12 +157,33 @@ func (qss *App) handleSelecting() {
 	}
 
 	// draw
-	// Calculate the width and height as the absolute difference between the initial and final positions
 	rectSize := getRectSize(qss.recInitPos, qss.recFinalPos)
 
 	// Determine the top-left corner of the rectangle
 	topLeftX := int32(math.Min(float64(qss.recInitPos.X), float64(qss.recFinalPos.X)))
 	topLeftY := int32(math.Min(float64(qss.recInitPos.Y), float64(qss.recFinalPos.Y)))
 
-	rl.DrawRectangleLines(topLeftX-1, topLeftY-1, int32(rectSize.X)+2, int32(rectSize.Y)+2, drawColor)
+	rl.DrawRectangleLines(topLeftX, topLeftY, int32(rectSize.X), int32(rectSize.Y), drawColor)
+}
+
+func (qss *App) handleSelected() {
+	// take screen shot
+	topLeftX := float32(math.Min(float64(qss.recInitPos.X), float64(qss.recFinalPos.X)))
+	topLeftY := float32(math.Min(float64(qss.recInitPos.Y), float64(qss.recFinalPos.Y)))
+	botRightX := float32(math.Max(float64(qss.recInitPos.X), float64(qss.recFinalPos.X)))
+	botRightY := float32(math.Max(float64(qss.recInitPos.Y), float64(qss.recFinalPos.Y)))
+
+	captureAndSaveAsPNG(image.Rectangle{
+		Min: image.Point{
+			X: int(topLeftX),
+			Y: int(topLeftY),
+		},
+		Max: image.Point{
+			X: int(botRightX),
+			Y: int(botRightY),
+		},
+	}, fmt.Sprintf("screenshot-%s.png", getCurrentTimeStr()))
+	// after taking screenshot, quit
+	qss.done = true
+	qss.state = Idle
 }
