@@ -1,4 +1,4 @@
-module github.com/mcbattirola/printit
+module github.com/mcbattirola/qss
 
 go 1.21.3
 
