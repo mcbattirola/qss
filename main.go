@@ -8,12 +8,13 @@ import (
 )
 
 func main() {
-	defaultConfig, err := qss.DefaultConfig()
+	config, err := qss.ReadConfig()
 	if err != nil {
 		fmt.Printf("error: %s\n", err.Error())
+		os.Exit(1)
 	}
 
-	app := qss.New(defaultConfig)
+	app := qss.New(config)
 	if err := app.Run(); err != nil {
 		os.Exit(1)
 	}

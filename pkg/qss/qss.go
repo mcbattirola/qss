@@ -109,10 +109,8 @@ func (qss *App) handleIdle() {
 		qss.state = Selected
 	}
 
-	for _, k := range keys {
-		if rl.IsKeyPressed(k.key) {
-			k.fn(qss)
-		}
+	if rl.IsKeyPressed(rl.KeyH) {
+		qss.showHelp = !qss.showHelp
 	}
 
 	// draw instructions, UI etc
@@ -188,6 +186,7 @@ func (qss *App) handleSelected() {
 	qss.state = Idle
 }
 
-func (qss *App) drawText(str string, x, y int32) {
-	rl.DrawText(str, x, y, int32(qss.config.FontSize), qss.config.FontColor)
+func (qss *App) drawTextCentered(str string, x, y int32) {
+	size := rl.MeasureText(str, int32(qss.config.FontSize))
+	rl.DrawText(str, x-(size/2), y, int32(qss.config.FontSize), qss.config.FontColor)
 }

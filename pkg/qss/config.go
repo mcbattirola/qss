@@ -7,19 +7,27 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-// Defaults
 const (
-	DefaultFontSize = 18
+	ConfigFileName = ".qss.conf"
+
+	// Defaults
+	DefaultFontSize = 24
 	DefaultShowSize = true
 	DefaultShowHelp = true
-	DefaultHelpX    = -400
-	DefaultHelpY    = -400
 	DefaultFileDir  = "Pictures"
 )
 
 var (
-	DefaultFontColor = rl.Red
+	DefaultFontColor = rl.Lime
 )
+
+func DefaultFilePath() (string, error) {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+	return path.Join(homeDir, DefaultFileDir), nil
+}
 
 type Config struct {
 	FontSize  int
@@ -31,19 +39,28 @@ type Config struct {
 	FilePath  string
 }
 
-func DefaultConfig() (Config, error) {
-	homeDir, err := os.UserHomeDir()
+// ReadConfig reads the config file if it exists
+// and returns a config object
+func ReadConfig() (Config, error) {
+	filePath, err := DefaultFilePath()
 	if err != nil {
 		return Config{}, err
 	}
 
-	return Config{
+	// defaults
+	config := Config{
 		FontSize:  DefaultFontSize,
 		FontColor: DefaultFontColor,
 		ShowSize:  DefaultShowSize,
 		ShowHelp:  DefaultShowHelp,
-		HelpX:     DefaultHelpX,
-		HelpY:     DefaultHelpY,
-		FilePath:  path.Join(homeDir, DefaultFileDir),
-	}, nil
+		FilePath:  filePath,
+	}
+
+	// overwrite defaults with user configs
+	err = parseConfigFile(&config)
+	if err != nil {
+		return Config{}, err
+	}
+
+	return config, nil
 }
