@@ -1,16 +1,16 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
+	"github.com/mcbattirola/qss/pkg/logger"
 	"github.com/mcbattirola/qss/pkg/qss"
 )
 
 func main() {
 	config, err := qss.ReadConfig()
 	if err != nil {
-		fmt.Printf("error: %s\n", err.Error())
+		logger.Error(err.Error())
 		os.Exit(1)
 	}
 

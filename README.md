@@ -27,7 +27,7 @@ save-path=/home/user/
   - [x] Esc/right click (during selection): cancel current selection, don't quit app
 - [x] Show rect size while dragging
 - [ ] Test on other OSs
-- [ ] Use slog instead of std.Fmt
+- [x] Use log pkg instead of std.Fmt
 - [ ] Run on multiple monitors
 - [ ] Builds and installer/instructions
   - [ ] CD

@@ -9,6 +9,7 @@ import (
 	"path"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
+	"github.com/mcbattirola/qss/pkg/logger"
 	"github.com/mcbattirola/qss/pkg/utils"
 )
 
@@ -74,7 +75,7 @@ func (qss *App) Run() error {
 		case Selected:
 			qss.handleSelected()
 		default:
-			fmt.Printf("unknown state %d\n", qss.state)
+			logger.Error("unknown state %d\n", qss.state)
 			return errors.New("app got into unknown state")
 		}
 
@@ -181,6 +182,7 @@ func (qss *App) handleSelected() {
 			Y: int(botRightY),
 		},
 	}, path.Join(qss.config.FilePath, fmt.Sprintf("screenshot-%s.png", utils.GetCurrentTimeStr())))
+
 	// after taking screenshot, quit
 	qss.done = true
 	qss.state = Idle
@@ -189,4 +191,23 @@ func (qss *App) handleSelected() {
 func (qss *App) drawTextCentered(str string, x, y int32) {
 	size := rl.MeasureText(str, int32(qss.config.FontSize))
 	rl.DrawText(str, x-(size/2), y, int32(qss.config.FontSize), qss.config.FontColor)
+}
+
+func (qss *App) drawHelp() {
+	screenWidth := rl.GetScreenWidth()
+	currX := int32(screenWidth / 2)
+
+	screenHeight := rl.GetScreenHeight()
+	horizontalDisplacement := float32(screenHeight) * 0.25
+	currY := int32((screenHeight / 2) - int(horizontalDisplacement))
+
+	qss.drawTextCentered("Click and drag", currX, currY)
+	currY += int32(qss.config.FontSize * 2)
+	qss.drawTextCentered("Right click to print whole screen", currX, currY)
+	currY += int32(qss.config.FontSize * 2)
+	qss.drawTextCentered("During selection, right click or esc to cancel", currX, currY)
+	currY += int32(qss.config.FontSize * 2)
+	qss.drawTextCentered("ESC to quit", currX, currY)
+	currY += int32(qss.config.FontSize * 2)
+	qss.drawTextCentered("'h' to show/hide this help", currX, currY)
 }

@@ -2,11 +2,12 @@ package qss
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"path"
 	"strconv"
 	"strings"
+
+	"github.com/mcbattirola/qss/pkg/logger"
 )
 
 func getConfigFilePath() (string, error) {
@@ -23,17 +24,17 @@ func parseConfigFile(config *Config) error {
 		return err
 	}
 
-	fmt.Printf("config file path is %s\n", path)
+	logger.Info("config file path is %s\n", path)
 
 	file, err := os.Open(path)
 	if err != nil {
 		if os.IsNotExist(err) {
-			fmt.Printf("config file not found at %s\n", path)
+			logger.Error("config file not found at %s\n", path)
 			return nil
 		}
 		return err
 	}
-	fmt.Println("reading config file")
+	logger.Info("reading config file")
 
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
@@ -53,7 +54,7 @@ func parseConfigFile(config *Config) error {
 			case "font-size":
 				size, err := strconv.Atoi(v)
 				if err != nil {
-					fmt.Printf("could not parse 'font-size': %s\n", err)
+					logger.Error("could not parse 'font-size': %s\n", err)
 				}
 				config.FontSize = size
 			case "show-help":
@@ -63,7 +64,7 @@ func parseConfigFile(config *Config) error {
 			case "save-path":
 				config.FilePath = v
 			default:
-				fmt.Printf("unknown config key %s\n", k)
+				logger.Warn("unknown config key %s\n", k)
 			}
 		}
 	}

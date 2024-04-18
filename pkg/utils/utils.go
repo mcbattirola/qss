@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"image"
 	"image/png"
 	"math"
@@ -11,6 +10,7 @@ import (
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"github.com/kbinani/screenshot"
+	"github.com/mcbattirola/qss/pkg/logger"
 )
 
 // captureAndSaveAsPNG captures the area inside bounds and
@@ -19,13 +19,13 @@ import (
 func CaptureAndSaveAsPNG(bounds image.Rectangle, fileName string) error {
 	img, err := screenshot.CaptureRect(bounds)
 	if err != nil {
-		fmt.Printf("error taking screenshot:%s\n", err.Error())
+		logger.Error("error taking screenshot:%s\n", err.Error())
 		return err
 	}
 	// TODO: add a sufix is file already exists
 	file, err := os.Create(fileName)
 	if err != nil {
-		fmt.Printf("error creating image:%s\n", err.Error())
+		logger.Error("error creating image:%s\n", err.Error())
 		return err
 	}
 	defer file.Close()
