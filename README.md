@@ -25,23 +25,13 @@ save-path=/home/user/
 
 # Roadmap
 
-- [x] Show instructions (but hide during snapshotting)
-- [x] Config file
-  - [x] file path
-  - [x] show help
-  - [x] font size
-- [x] Keys
-  - [x] Right click: print whole screen
-  - [x] Right click while dragging: cancel selection
-  - [x] Esc: quit
-  - [x] Esc/right click (during selection): cancel current selection, don't quit app
-- [x] Show rect size while dragging
 - [ ] Test on other OSs
-- [x] Use log pkg instead of std.Fmt
+  - [ ] Linux
+  - [x] Windows
+  - [ ] macOS
 - [ ] Run on multiple monitors
-- [ ] Builds and installer/instructions
+- [ ] Builds and install instructions
   - [ ] CD
   - [ ] Linux
-    - [ ] Package managers?
   - [ ] Windows
   - [ ] Macos
