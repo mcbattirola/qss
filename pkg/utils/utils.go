@@ -44,3 +44,13 @@ func GetRectSize(recInitPos, recFinalPos rl.Vector2) rl.Vector2 {
 	height := float32(math.Abs(float64(recFinalPos.Y - recInitPos.Y)))
 	return rl.Vector2{X: width, Y: height}
 }
+
+// CaptureScreen captures the whole screen
+func CaptureScreen(display int) (*image.RGBA, error) {
+	bounds := screenshot.GetDisplayBounds(display)
+	img, err := screenshot.CaptureRect(bounds)
+	if err != nil {
+		return nil, err
+	}
+	return img, nil
+}

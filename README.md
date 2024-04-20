@@ -26,7 +26,9 @@ save-path=/home/user/
 # Roadmap
 
 - [ ] Test on other OSs
-  - [ ] Linux
+  - [x] Linux
+    - [x] x
+    - [ ] Wayland
   - [x] Windows
   - [ ] macOS
 - [ ] Run on multiple monitors

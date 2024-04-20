@@ -43,6 +43,17 @@ func New(config Config) *App {
 }
 
 func (qss *App) Run() error {
+	// Before opening the window, take a screenshot of the screen
+	// so we can draw it to our window.
+	// This is done to have better compatibility between OSs,
+	// since in some desktop environments showing a transparent
+	// window don't work.
+	screenImg, err := utils.CaptureScreen(rl.GetCurrentMonitor())
+	if err != nil {
+		return err
+	}
+	rlImage := rl.NewImageFromImage(screenImg)
+
 	// open window
 	rl.SetConfigFlags(rl.FlagWindowTransparent)
 	rl.InitWindow(0, 0, APP_NAME)
@@ -51,6 +62,10 @@ func (qss *App) Run() error {
 	rl.SetWindowState(rl.FlagWindowUndecorated |
 		rl.FlagBorderlessWindowedMode |
 		rl.FlagWindowAlwaysRun)
+
+	// load our background texture
+	screenTexture := rl.LoadTextureFromImage(rlImage)
+	defer rl.UnloadTexture(screenTexture)
 
 	var screenWidth int32 = int32(rl.GetMonitorWidth(rl.GetCurrentMonitor()))
 	var screenHeight int32 = int32(rl.GetMonitorHeight(rl.GetCurrentMonitor())) + 1
@@ -85,6 +100,9 @@ func (qss *App) Run() error {
 		// ----- start drawing to screen
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.Blank)
+		// draw background texture
+		rl.DrawTexture(screenTexture, 0, 0, rl.White)
+
 		// for some reason we have to flip the Y here
 		rl.DrawTexturePro(target.Texture, rl.Rectangle{X: 0.0, Y: 0.0, Width: float32(screenWidth), Height: float32(screenHeight) * -1}, rl.Rectangle{X: 0.0, Y: 0.0, Width: float32(screenWidth), Height: float32(screenHeight)},
 			rl.Vector2{X: 0, Y: 0}, 0.0, rl.White)
