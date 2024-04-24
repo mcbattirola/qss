@@ -7,6 +7,7 @@ import (
 	"math"
 	"os"
 	"path"
+	"runtime"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"github.com/mcbattirola/qss/pkg/logger"
@@ -100,8 +101,10 @@ func (qss *App) Run() error {
 		// ----- start drawing to screen
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.Blank)
-		// draw background texture
-		rl.DrawTexture(screenTexture, 0, 0, rl.White)
+		// draw background texture on Linux
+		if runtime.GOOS == "linux" {
+			rl.DrawTexture(screenTexture, 0, 0, rl.White)
+		}
 
 		// for some reason we have to flip the Y here
 		rl.DrawTexturePro(target.Texture, rl.Rectangle{X: 0.0, Y: 0.0, Width: float32(screenWidth), Height: float32(screenHeight) * -1}, rl.Rectangle{X: 0.0, Y: 0.0, Width: float32(screenWidth), Height: float32(screenHeight)},
