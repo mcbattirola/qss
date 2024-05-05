@@ -8,25 +8,25 @@ import (
 )
 
 const (
-	ConfigFileName = ".qss.conf"
+	configFileName = ".qss.conf"
 
 	// Defaults
-	DefaultFontSize = 24
-	DefaultShowSize = true
-	DefaultShowHelp = true
-	DefaultFileDir  = "Pictures"
+	defaultFontSize = 24
+	defaultShowSize = true
+	defaultShowHelp = true
+	defaultFileDir  = "Pictures"
 )
 
 var (
 	DefaultFontColor = rl.Lime
 )
 
-func DefaultFilePath() (string, error) {
+func defaultFilePath() (string, error) {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return "", err
 	}
-	return path.Join(homeDir, DefaultFileDir), nil
+	return path.Join(homeDir, defaultFileDir), nil
 }
 
 type Config struct {
@@ -42,17 +42,17 @@ type Config struct {
 // ReadConfig reads the config file if it exists
 // and returns a config object
 func ReadConfig() (Config, error) {
-	filePath, err := DefaultFilePath()
+	filePath, err := defaultFilePath()
 	if err != nil {
 		return Config{}, err
 	}
 
 	// defaults
 	config := Config{
-		FontSize:  DefaultFontSize,
+		FontSize:  defaultFontSize,
 		FontColor: DefaultFontColor,
-		ShowSize:  DefaultShowSize,
-		ShowHelp:  DefaultShowHelp,
+		ShowSize:  defaultShowSize,
+		ShowHelp:  defaultShowHelp,
 		FilePath:  filePath,
 	}
 

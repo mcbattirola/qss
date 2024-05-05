@@ -101,13 +101,15 @@ func (qss *App) Run() error {
 		// ----- start drawing to screen
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.Blank)
-		// draw background texture on Linux
+		// only draw background texture on Linux,
+		// since drawing an invisible window in Windows seems to work well
 		if runtime.GOOS == "linux" {
 			rl.DrawTexture(screenTexture, 0, 0, rl.White)
 		}
 
-		// for some reason we have to flip the Y here
-		rl.DrawTexturePro(target.Texture, rl.Rectangle{X: 0.0, Y: 0.0, Width: float32(screenWidth), Height: float32(screenHeight) * -1}, rl.Rectangle{X: 0.0, Y: 0.0, Width: float32(screenWidth), Height: float32(screenHeight)},
+		rl.DrawTexturePro(target.Texture,
+			rl.Rectangle{X: 0.0, Y: 0.0, Width: float32(screenWidth), Height: float32(screenHeight) * -1},
+			rl.Rectangle{X: 0.0, Y: 0.0, Width: float32(screenWidth), Height: float32(screenHeight)},
 			rl.Vector2{X: 0, Y: 0}, 0.0, rl.White)
 		rl.EndDrawing()
 		// ----- end drawing to screen

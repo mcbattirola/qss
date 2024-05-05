@@ -15,7 +15,7 @@ func getConfigFilePath() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return path.Join(homeDir, ConfigFileName), nil
+	return path.Join(homeDir, configFileName), nil
 }
 
 func parseConfigFile(config *Config) error {
@@ -45,7 +45,7 @@ func parseConfigFile(config *Config) error {
 			k := split[0]
 			v := split[1]
 
-			// ignore lintes starting with #
+			// ignore lines starting with #
 			if len(k) > 0 && k[0] == '#' {
 				continue
 			}
