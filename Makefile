@@ -7,7 +7,7 @@ all: build
 build:
 	go build -o $(BUILD_PATH) main.go
 
-# build on Windows
+# build to Windows
 build-w:
 	GOOS=windows GOARCH=amd64 go build -o $(BUILD_PATH).exe -ldflags "-H=windowsgui" main.go
 
