@@ -57,7 +57,7 @@ func ReadConfig() (Config, error) {
 	}
 
 	// overwrite defaults with user configs
-	err = parseConfigFile(&config)
+	err = loadConfig(&config)
 	if err != nil {
 		return Config{}, err
 	}

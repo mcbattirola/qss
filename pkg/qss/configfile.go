@@ -18,7 +18,7 @@ func getConfigFilePath() (string, error) {
 	return path.Join(homeDir, configFileName), nil
 }
 
-func parseConfigFile(config *Config) error {
+func loadConfig(config *Config) error {
 	path, err := getConfigFilePath()
 	if err != nil {
 		return err
@@ -34,11 +34,18 @@ func parseConfigFile(config *Config) error {
 		}
 		return err
 	}
+	defer file.Close()
 	logger.Info("reading config file")
 
-	defer file.Close()
-	scanner := bufio.NewScanner(file)
+	parseConfigFile(file, config)
+	return nil
+}
 
+// parseConfigFile parses the content of the pointed file into config.
+// In case of an unknown key, it logs the error and don't fail.
+// Caller is responsible for closing the file descriptor.
+func parseConfigFile(file *os.File, config *Config) {
+	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		split := strings.Split(scanner.Text(), "=")
 		if len(split) >= 2 {
@@ -50,6 +57,8 @@ func parseConfigFile(config *Config) error {
 				continue
 			}
 
+			k = strings.TrimSpace(k)
+
 			switch k {
 			case "font-size":
 				size, err := strconv.Atoi(v)
@@ -60,6 +69,8 @@ func parseConfigFile(config *Config) error {
 			case "show-help":
 				if v == "true" {
 					config.ShowHelp = true
+				} else {
+					config.ShowHelp = false
 				}
 			case "save-path":
 				config.FilePath = v
@@ -68,6 +79,4 @@ func parseConfigFile(config *Config) error {
 			}
 		}
 	}
-
-	return nil
 }
