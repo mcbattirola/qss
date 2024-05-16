@@ -1,6 +1,6 @@
 module github.com/mcbattirola/qss
 
-go 1.21.3
+go 1.21
 
 require (
 	github.com/gen2brain/raylib-go/raylib v0.0.0-20240227114648-c3665eb9abf8

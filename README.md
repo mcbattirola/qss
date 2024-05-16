@@ -23,15 +23,26 @@ show-help=true
 save-path=/home/user/
 ```
 
-# Roadmap
+## Development
+
+Pre-requisites:
+
+- Go
+- [raylib-go](https://github.com/gen2brain/raylib-go?tab=readme-ov-file#raylib-go) requirements
+
+```bash
+make run # run the project
+make build # builds the project
+make build-w # builds the project for windows
+```
+
+Builds go to `/dist`.
+
+## Roadmap
 
 - [ ] Test on other OSs
   - [x] Linux
     - [x] x
     - [ ] Wayland
   - [x] Windows
-- [ ] Run on multiple monitors
-- [ ] Builds and install instructions
-  - [ ] CD
-  - [ ] Linux
-  - [ ] Windows
+- [ ] Work with multi-monitor
