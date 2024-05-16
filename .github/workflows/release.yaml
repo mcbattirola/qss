@@ -25,7 +25,7 @@ jobs:
     - name: Install raylib-go dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libgl1-mesa-dev libxi-dev libxcursor-dev libxrandr-dev libxinerama-dev libxxf86vm-dev
+        sudo apt-get install -y libgl1-mesa-dev libxi-dev libxcursor-dev libxrandr-dev libxinerama-dev libxxf86vm-dev wayland-protocols libwayland-dev
         go get -v github.com/gen2brain/raylib-go/raylib
 
     - name: Build project

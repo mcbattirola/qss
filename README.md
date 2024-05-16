@@ -45,8 +45,4 @@ Builds go to `/dist`.
     - [x] x
     - [ ] Wayland
   - [x] Windows
-- [ ] Run on multiple monitors
-- [ ] Builds and install instructions
-  - [ ] CD
-  - [ ] Linux
-  - [ ] Windows
+- [ ] Work with multi-monitor
